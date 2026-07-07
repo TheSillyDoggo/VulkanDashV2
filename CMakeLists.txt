@@ -40,6 +40,12 @@ CPMAddPackage(
     GIT_TAG 668550d
 )
 
+# enable symbols on windows
+if (WIN32)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE _CRT_SECURE_NO_WARNINGS)
+  set_target_properties(${PROJECT_NAME} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
+
 include_directories(
     src/Utils
 )
