@@ -37,25 +37,30 @@ class $modify (BGFXTextureAtlas, CCTextureAtlas)
 
         bgfx::TransientVertexBuffer tvb;
         bgfx::allocTransientVertexBuffer(&tvb, m_uTotalQuads * 4, VertexLayoutManager::get<cocos2d::ccV3F_C4B_T2F>());
-        memcpy(tvb.data, getQuads(), tvb.size);
+        memcpy(tvb.data, m_pQuads, tvb.size);
 
         bgfx::TransientIndexBuffer tib;
-        bgfx::allocTransientIndexBuffer(&tib, m_uTotalQuads * 5, true);
+        bgfx::allocTransientIndexBuffer(&tib, m_uTotalQuads * 6, true);
         auto data = reinterpret_cast<uint32_t*>(tib.data);
 
         for (size_t i = 0; i < m_uTotalQuads; i++)
         {
-            data[i * 5] = i;
-            data[i * 5 + 1] = i + 1;
-            data[i * 5 + 2] = i + 2;
-            data[i * 5 + 3] = i + 3;
-            data[i * 5 + 4] = 0xFFFFFFFF;
+            size_t baseVert = i * 4;
+            size_t baseInd = i * 6;
+
+            data[baseInd] = baseVert;
+            data[baseInd + 1] = baseVert + 1;
+            data[baseInd + 2] = baseVert + 2;
+
+            data[baseInd + 3] = baseVert + 1;
+            data[baseInd + 4] = baseVert + 3;
+            data[baseInd + 5] = baseVert + 2;
         }
 
         bgfx::setVertexBuffer(0, &tvb);
         bgfx::setIndexBuffer(&tib);
 
-        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA | BGFX_STATE_PT_TRISTRIP);
+        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFXUtils::getBlendFunc());
 
         bgfx::submit(0, ShaderCache::get("sprite.vs.sc", "sprite.fs.sc"));
     }

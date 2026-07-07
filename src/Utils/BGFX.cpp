@@ -35,3 +35,49 @@ kmMat4 BGFXUtils::getMatrix()
 
     return model;
 }
+
+uint64_t BGFXUtils::getBlendFunc()
+{
+    GLint blendSrcRGB, blendDstRGB, blendSrcAlpha, blendDstAlpha;
+
+    glGetIntegerv(GL_BLEND_SRC_RGB, &blendSrcRGB);
+    glGetIntegerv(GL_BLEND_DST_RGB, &blendDstRGB);
+    glGetIntegerv(GL_BLEND_SRC_ALPHA, &blendSrcAlpha);
+    glGetIntegerv(GL_BLEND_DST_ALPHA, &blendDstAlpha);
+
+    return BGFX_STATE_BLEND_FUNC_SEPARATE(glToBGFXBlend(blendSrcRGB), glToBGFXBlend(blendDstRGB), glToBGFXBlend(blendSrcAlpha), glToBGFXBlend(blendDstAlpha));
+}
+
+uint64_t BGFXUtils::getBlendFunc(cocos2d::ccBlendFunc blend)
+{
+    return BGFX_STATE_BLEND_FUNC(glToBGFXBlend(blend.src), glToBGFXBlend(blend.dst));
+}
+
+uint64_t BGFXUtils::glToBGFXBlend(int gl)
+{
+    switch (gl)
+    {
+        case GL_ONE:
+            return BGFX_STATE_BLEND_ONE;
+        case GL_SRC_COLOR:
+            return BGFX_STATE_BLEND_SRC_COLOR;
+        case GL_ONE_MINUS_SRC_COLOR:
+            return BGFX_STATE_BLEND_INV_SRC_COLOR;
+        case GL_SRC_ALPHA:
+            return BGFX_STATE_BLEND_SRC_ALPHA;
+        case GL_ONE_MINUS_SRC_ALPHA:
+            return BGFX_STATE_BLEND_INV_SRC_ALPHA;
+        case GL_DST_ALPHA:
+            return BGFX_STATE_BLEND_DST_ALPHA;
+        case GL_ONE_MINUS_DST_ALPHA:
+            return BGFX_STATE_BLEND_INV_DST_ALPHA;
+        case GL_DST_COLOR:
+            return BGFX_STATE_BLEND_DST_COLOR;
+        case GL_ONE_MINUS_DST_COLOR:
+            return BGFX_STATE_BLEND_INV_DST_COLOR;
+        case GL_SRC_ALPHA_SATURATE:
+            return BGFX_STATE_BLEND_SRC_ALPHA_SAT;
+        default:
+            return 0;
+    }
+}

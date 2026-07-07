@@ -32,8 +32,9 @@ class $modify (BGFXSprite, CCSprite)
 
         bgfx::setVertexBuffer(0, &tvb);
         bgfx::setIndexBuffer(getIbh());
+        // bgfx::setTexture(0, )
 
-        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA);
+        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFXUtils::getBlendFunc(m_sBlendFunc));
 
         bgfx::submit(0, ShaderCache::get("sprite.vs.sc", "sprite.fs.sc"));
     }
