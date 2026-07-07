@@ -4,6 +4,7 @@
 #include "../Utils/VertexLayoutManager.hpp"
 #include "../Utils/ShaderCache.hpp"
 #include <BGFX.hpp>
+#include "../CCTexture2D.hpp"
 
 using namespace geode::prelude;
 
@@ -73,14 +74,15 @@ class $modify (BGFXLayerColor, CCLayerColor)
                 out[i].colors.a = m_pSquareColors[3].a * 255;
             }
 
-            out[i].texCoords.u = 0;
-            out[i].texCoords.v = 0;
+            out[i].texCoords.u = v[i].x;
+            out[i].texCoords.v = v[i].y;
         }
         
         memcpy(tvb.data, &out, tvb.size);
 
         bgfx::setVertexBuffer(0, &tvb);
         bgfx::setIndexBuffer(getIbh2());
+        static_cast<BGFXTexture2D*>(BGFXUtils::getBlankTex())->bind();
 
         bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFXUtils::getBlendFunc(m_tBlendFunc));
 

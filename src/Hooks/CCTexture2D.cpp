@@ -1,4 +1,5 @@
 #include "CCTexture2D.hpp"
+#include <ShaderCache.hpp>
 
 using namespace geode::prelude;
 
@@ -20,6 +21,54 @@ bool BGFXTexture2D::initWithData(const void* data, CCTexture2DPixelFormat pixelF
 
     extraData[this] = bgData;
     return CCTexture2D::initWithData(data, pixelFormat, pixelsWide, pixelsHigh, contentSize);
+}
+
+void BGFXTexture2D::setTexParameters(ccTexParams* texParams)
+{
+    uint32_t flags = 0;
+
+    switch (texParams->wrapS)
+    {
+        case GL_CLAMP_TO_EDGE:
+            flags |= BGFX_SAMPLER_U_CLAMP;
+            break;
+        case GL_MIRRORED_REPEAT:
+            flags |= BGFX_SAMPLER_U_MIRROR;
+            break;
+    }
+
+    switch (texParams->wrapT)
+    {
+        case GL_CLAMP_TO_EDGE:
+            flags |= BGFX_SAMPLER_V_CLAMP;
+            break;
+        case GL_MIRRORED_REPEAT:
+            flags |= BGFX_SAMPLER_V_MIRROR;
+            break;
+    }
+
+    if (texParams->magFilter == GL_NEAREST)
+        flags |= BGFX_SAMPLER_MAG_POINT;
+
+    switch (texParams->minFilter)
+    {
+        case GL_NEAREST_MIPMAP_LINEAR:
+        case GL_NEAREST:
+            flags |= BGFX_SAMPLER_MIN_POINT;
+            break;
+        case GL_NEAREST_MIPMAP_NEAREST:
+            flags |= BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MIP_POINT;
+
+        case GL_LINEAR_MIPMAP_NEAREST:
+            flags |= BGFX_SAMPLER_MIP_POINT;
+    }
+
+    extraData[this].flags = flags;
+}
+
+void BGFXTexture2D::bind()
+{
+    bgfx::setTexture(0, ShaderCache::getSpriteUniform(), getHandle(), extraData[this].flags);
 }
 
 bgfx::TextureHandle BGFXTexture2D::getHandle()

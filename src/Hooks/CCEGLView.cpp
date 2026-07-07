@@ -28,6 +28,8 @@ class $modify (BGFXEGLView, CCEGLView)
 
         bgfx::dbgTextPrintf(0, 4, 0x0f, "Renderer: %s", bgfx::getRendererName(bgfx::getRendererType()));
         bgfx::dbgTextPrintf(0, 5, 0x0f, "GPU: %s", reinterpret_cast<const char*>(gpu));
+        if (CCDirector::get()->m_pFPSNode)
+            bgfx::dbgTextPrintf(0, 6, 0x0f, "%s", CCDirector::get()->m_pFPSNode->getString());
         
         bgfx::frame();
     }

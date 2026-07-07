@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <Geode/cocos/include/ccTypes.h>
+#include <Geode/cocos/textures/CCTexture2D.h>
 
 struct kmMat4;
 
@@ -12,4 +13,5 @@ namespace BGFXUtils
     uint64_t getBlendFunc();
     uint64_t getBlendFunc(cocos2d::ccBlendFunc);
     uint64_t glToBGFXBlend(int gl);
+    cocos2d::CCTexture2D* getBlankTex();
 };

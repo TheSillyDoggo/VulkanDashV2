@@ -85,3 +85,9 @@ bgfx::ShaderHandle ShaderCache::getShader(std::string file)
     shaders[finalName] = handle;
     return handle;
 }
+
+bgfx::UniformHandle ShaderCache::getSpriteUniform()
+{
+    static bgfx::UniformHandle handle = bgfx::createUniform("s_texColor", bgfx::UniformType::Sampler);
+    return handle;
+}

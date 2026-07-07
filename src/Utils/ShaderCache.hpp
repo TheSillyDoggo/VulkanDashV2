@@ -12,4 +12,6 @@ class ShaderCache
     public:
         static bgfx::ProgramHandle get(std::string vertex, std::string frag);
         static bgfx::ShaderHandle getShader(std::string file);
+
+        static bgfx::UniformHandle getSpriteUniform();
 };

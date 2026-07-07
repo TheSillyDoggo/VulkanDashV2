@@ -4,6 +4,7 @@
 #include "../Utils/VertexLayoutManager.hpp"
 #include "../Utils/ShaderCache.hpp"
 #include <BGFX.hpp>
+#include "../CCTexture2D.hpp"
 
 using namespace geode::prelude;
 
@@ -22,6 +23,7 @@ class $modify (BGFXSprite, CCSprite)
 {
     void draw()
     {
+        return;
         kmMat4 mat = BGFXUtils::getMatrix();
         
         bgfx::setTransform(mat.mat);
@@ -32,7 +34,7 @@ class $modify (BGFXSprite, CCSprite)
 
         bgfx::setVertexBuffer(0, &tvb);
         bgfx::setIndexBuffer(getIbh());
-        // bgfx::setTexture(0, )
+        static_cast<BGFXTexture2D*>(m_pobTexture)->bind();
 
         bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFXUtils::getBlendFunc(m_sBlendFunc));
 

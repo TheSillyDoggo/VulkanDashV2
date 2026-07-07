@@ -81,3 +81,8 @@ uint64_t BGFXUtils::glToBGFXBlend(int gl)
             return 0;
     }
 }
+
+cocos2d::CCTexture2D* BGFXUtils::getBlankTex()
+{
+    return cocos2d::CCTextureCache::get()->addImage("cc_2x2_white_image", true);
+}
