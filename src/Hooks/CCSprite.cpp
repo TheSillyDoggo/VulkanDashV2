@@ -1,4 +1,4 @@
-/*#include <Geode/Geode.hpp>
+#include <Geode/Geode.hpp>
 #include <Geode/modify/CCSprite.hpp>
 #include <bgfx/bgfx.h>
 #include "../Utils/VertexLayoutManager.hpp"
@@ -6,7 +6,7 @@
 
 using namespace geode::prelude;
 
-kmMat4 getNodeToWorldTransform(cocos2d::CCNode* node)
+kmMat4 getNodeToWorldTransform()
 {
     kmMat4 model;
     kmGLGetMatrix(KM_GL_MODELVIEW, &model);
@@ -24,81 +24,41 @@ class $modify (BGFXSprite, CCSprite)
 {
     struct Fields
     {
-        bgfx::TransientVertexBuffer tvb;
-        bgfx::TransientIndexBuffer tib;
-        bgfx::DynamicVertexBufferHandle vbh;
-        bgfx::DynamicIndexBufferHandle ibh;
+        bgfx::VertexBufferHandle vbh;
+        bgfx::IndexBufferHandle ibh;
     };
 
     virtual bool initWithTexture(CCTexture2D *pTexture, const CCRect& rect)
     {
-        static const uint16_t indices[6] = {
+        static cocos2d::ccV3F_C4B_T2F vertices[] = {
+            {{0, 1, 0.0f}, ccc4(255, 0, 0, 255), {0, 0}},
+            {{1, 1, 0.0f}, ccc4(0, 255, 0, 255), {0, 0}},
+            {{0, 0, 0.0f}, ccc4(0, 0, 255, 255), {0, 0}},
+            {{1, 0, 0.0f}, ccc4(0, 0, 0, 255), {0, 0}},
+        };
+
+        static const uint16_t indices[] = {
             0, 1, 2,
-            0, 2, 3
+            1, 3, 2
         };
 
-        bgfx::allocTransientVertexBuffer(&m_fields->tvb, 4, VertexLayoutManager::get<cocos2d::ccV3F_C4B_T2F>());
-        bgfx::allocTransientIndexBuffer(&m_fields->tib, 6);
-        memcpy(m_fields->tib.data, indices, sizeof(indices));
-
-        const auto& q = m_sQuad;
-        cocos2d::ccV3F_C4B_T2F verts[4] = {
-            q.bl, q.br, q.tr, q.tl
-        };
-
-        memcpy(m_fields->tvb.data, verts, sizeof(verts));
-
-        m_fields->vbh = bgfx::createDynamicVertexBuffer(bgfx::copy(verts, sizeof(verts)), VertexLayoutManager::get<cocos2d::ccV3F_C4B_T2F>());
-        m_fields->ibh = bgfx::createDynamicIndexBuffer(bgfx::copy(indices, sizeof(indices)));
+        m_fields->vbh = bgfx::createVertexBuffer(bgfx::makeRef(vertices, sizeof(vertices)), VertexLayoutManager::get<cocos2d::ccV3F_C4B_T2F>());
+        m_fields->ibh = bgfx::createIndexBuffer(bgfx::makeRef(indices, sizeof(indices)));
 
         return CCSprite::initWithTexture(pTexture, rect);
     }
 
-    void updateMemory()
-    {
-        const auto& q = m_sQuad;
-        cocos2d::ccV3F_C4B_T2F verts[4] = {
-            q.bl, q.br, q.tr, q.tl
-        };
-        
-        memcpy(m_fields->tvb.data, verts, sizeof(verts));
-
-        bgfx::update(m_fields->vbh, 0, bgfx::copy(verts, sizeof(verts)));
-    }
-
-    virtual void updateTransform(void)
-    {
-        CCSprite::updateTransform();
-
-        updateMemory();
-    }
-
     void draw()
     {
-        static bgfx::ProgramHandle program = ShaderCache::get("sprite.fs.sc", "sprite.vs.sc");
+        kmMat4 formatted;
+        kmMat4 mat = getNodeToWorldTransform();
 
-        // Layout must match your vertex type
-        static auto layout = VertexLayoutManager::get<cocos2d::ccV3F_C4B_T2F>();
+        kmMat4Transpose(&formatted, &mat);
+        bgfx::setTransform(formatted.mat);
 
-        // Transform
-        kmMat4 mat = getNodeToWorldTransform(this);
-        bgfx::setTransform(mat.mat);
-
-        // Bind buffers
-        // bgfx::setVertexBuffer(0, &m_fields->vbh);
-        // bgfx::setIndexBuffer(&m_fields->ibh);
         bgfx::setVertexBuffer(0, m_fields->vbh);
         bgfx::setIndexBuffer(m_fields->ibh);
 
-        // Texture (if you use it)
-        // bgfx::setTexture(0, s_texColor, textureHandle);
-
-        bgfx::setState(
-            BGFX_STATE_WRITE_RGB |
-            BGFX_STATE_WRITE_A |
-            BGFX_STATE_BLEND_ALPHA
-        );
-
-        bgfx::submit(0, program);
+        bgfx::submit(0, ShaderCache::get("sprite.vs.sc", "sprite.fs.sc"));
     }
-};*/
+};
