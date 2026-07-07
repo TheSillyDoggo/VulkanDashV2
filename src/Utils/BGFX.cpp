@@ -2,6 +2,7 @@
 #include <bgfx/bgfx.h>
 #include <bx/math.h>
 #include <ShaderCache.hpp>
+#include <Geode/Geode.hpp>
 
 void BGFXUtils::initBGFX(void* nativeHandle, int width, int height)
 {
@@ -14,6 +15,7 @@ void BGFXUtils::initBGFX(void* nativeHandle, int width, int height)
     init.resolution.width  = width;
     init.resolution.height = height;
     init.resolution.reset  = BGFX_RESET_NONE;
+    init.resolution.debugTextScale = 3;
     
     bgfx::init(init);
     bgfx::setDebug(BGFX_DEBUG_TEXT);
@@ -24,4 +26,12 @@ void BGFXUtils::initBGFX(void* nativeHandle, int width, int height)
         1.0f,
         0
     );
+}
+
+kmMat4 BGFXUtils::getMatrix()
+{
+    kmMat4 model;
+    kmGLGetMatrix(KM_GL_MODELVIEW, &model);
+
+    return model;
 }
