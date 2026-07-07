@@ -3,58 +3,49 @@
 #include <bgfx/bgfx.h>
 #include <bx/math.h>
 #include <ShaderCache.hpp>
+#include <macOS.hpp>
+#include <BGFX.hpp>
 
 using namespace geode::prelude;
 
-void* getWindowHandle()
-{
-    #ifdef GEODE_IS_WINDOWS
-    return WindowFromDC(wglGetCurrentDC());
-    #elifdef GEODE_IS_MACOS
-    return nullptr;
-    #else
-    return nullptr;
-    #endif
-}
-
 class $modify (BGFXEGLView, CCEGLView)
 {
-    bool initGlew()
-    {
-        CCEGLView::initGlew();
-
-        bgfx::Init init;
-        init.type = bgfx::RendererType::Enum::OpenGL;
-        init.vendorId = BGFX_PCI_ID_NONE;
-        init.platformData.nwh  = getWindowHandle();
-        init.platformData.ndt  = nullptr;
-        init.platformData.type = bgfx::NativeWindowHandleType::Default;
-        init.resolution.width  = (int)m_obScreenSize.width;
-        init.resolution.height = (int)m_obScreenSize.height;
-        init.resolution.reset  = BGFX_RESET_NONE;
-        bgfx::renderFrame();
-        bgfx::init(init);
-
-        bgfx::setDebug(BGFX_DEBUG_TEXT);
-
-        bgfx::setViewClear(0,
-            BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH,
-            0x000000ff,
-            1.0f,
-            0
-        );
-
-        return true;
-    }
-
     void swapBuffers()
     {
-        bgfx::frame();
-        bgfx::renderFrame();
-    }
-};
+        bgfx::touch(0);
 
-$on_mod(Loaded)
-{
-    (void)Mod::get()->patch(reinterpret_cast<void*>(geode::base::getCocos() + 0xbe40e), { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
+        bgfx::setViewRect(0, 0, 0, uint16_t(CCEGLView::get()->m_obScreenSize.width), uint16_t(CCEGLView::get()->m_obScreenSize.height) );
+        bgfx::dbgTextClear();
+
+        const bgfx::Stats* stats = bgfx::getStats();
+
+        bgfx::dbgTextPrintf(0, 2, 0x0f, "Backbuffer %dx%d"
+            , stats->width
+            , stats->height
+            );
+
+        const GLubyte* gpu = glGetString(GL_RENDERER);
+
+        bgfx::dbgTextPrintf(0, 4, 0x0f, "Renderer: %s", bgfx::getRendererName(bgfx::getRendererType()));
+        bgfx::dbgTextPrintf(0, 5, 0x0f, "GPU: %s", reinterpret_cast<const char*>(gpu));
+
+        float proj[16];
+        bx::mtxOrtho(
+            proj,
+            0.0f,
+            CCDirector::get()->getWinSize().width, 
+            CCDirector::get()->getWinSize().height,
+            0,
+            -10.0f,
+            1000.0f,
+            0.0f,
+            bgfx::getCaps()->homogeneousDepth
+        );
+
+        bgfx::setViewTransform(0, nullptr, proj);
+        bgfx::setViewRect(0, 0, 0, uint16_t(CCEGLView::get()->m_obScreenSize.width), uint16_t(CCEGLView::get()->m_obScreenSize.height));
+        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A);
+        
+        bgfx::frame();
+    }
 };

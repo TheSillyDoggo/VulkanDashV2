@@ -9,6 +9,7 @@ class $modify (BGFXDirector, CCDirector)
 {
     void drawScene(void)
     {
+        /*
         bgfx::touch(0);
 
         bgfx::setViewRect(0, 0, 0, uint16_t(CCEGLView::get()->m_obScreenSize.width), uint16_t(CCEGLView::get()->m_obScreenSize.height) );
@@ -43,7 +44,7 @@ class $modify (BGFXDirector, CCDirector)
 
         bgfx::setViewTransform(0, nullptr, proj);
         bgfx::setViewRect(0, 0, 0, uint16_t(CCEGLView::get()->m_obScreenSize.width), uint16_t(CCEGLView::get()->m_obScreenSize.height));
-        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A);
+        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A);*/
 
         CCDirector::drawScene();
     }

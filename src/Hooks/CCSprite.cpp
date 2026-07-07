@@ -1,4 +1,4 @@
-#include <Geode/Geode.hpp>
+/*#include <Geode/Geode.hpp>
 #include <Geode/modify/CCSprite.hpp>
 #include <bgfx/bgfx.h>
 #include "../Utils/VertexLayoutManager.hpp"
@@ -101,4 +101,4 @@ class $modify (BGFXSprite, CCSprite)
 
         bgfx::submit(0, program);
     }
-};
+};*/
