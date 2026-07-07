@@ -29,8 +29,6 @@ class $modify (BGFXDirector, CCDirector)
 
         bgfx::setViewTransform(0, view, proj);
         bgfx::setViewRect(0, 0, 0, uint16_t(CCEGLView::get()->m_obScreenSize.width), uint16_t(CCEGLView::get()->m_obScreenSize.height));
-        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A);
-
 
         CCDirector::drawScene();
     }

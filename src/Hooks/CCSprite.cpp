@@ -11,13 +11,10 @@ kmMat4 getNodeToWorldTransform()
     kmMat4 model;
     kmGLGetMatrix(KM_GL_MODELVIEW, &model);
 
-    kmMat4 projection;
-    kmGLGetMatrix(KM_GL_PROJECTION, &projection);
+    kmMat4 formatted;
+    kmMat4Transpose(&formatted, &model);
 
-    kmMat4 mvp;
-    kmMat4Multiply(&mvp, &projection, &model);
-
-    return mvp;
+    return formatted;
 }
 
 class $modify (BGFXSprite, CCSprite)
@@ -50,14 +47,14 @@ class $modify (BGFXSprite, CCSprite)
 
     void draw()
     {
-        kmMat4 formatted;
         kmMat4 mat = getNodeToWorldTransform();
-
-        kmMat4Transpose(&formatted, &mat);
-        bgfx::setTransform(formatted.mat);
+        
+        bgfx::setTransform(mat.mat);
 
         bgfx::setVertexBuffer(0, m_fields->vbh);
         bgfx::setIndexBuffer(m_fields->ibh);
+
+        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A);
 
         bgfx::submit(0, ShaderCache::get("sprite.vs.sc", "sprite.fs.sc"));
     }
