@@ -13,8 +13,16 @@ class $modify (BGFXTexture2D, cocos2d::CCTexture2D)
         uint32_t flags = 0;
     };
 
+    static void onModify(auto& self);
+
+    // hooks every function that uses opengl for reimplementation
     bool initWithData(const void* data, cocos2d::CCTexture2DPixelFormat pixelFormat, unsigned int pixelsWide, unsigned int pixelsHigh, const cocos2d::CCSize& contentSize);\
     void setTexParameters(cocos2d::ccTexParams* texParams);
+    void setAntiAliasTexParameters();
+    void setAliasTexParameters();
+    void generateMipmap();
+    void drawAtPoint(const cocos2d::CCPoint& point);
+    void drawInRect(const cocos2d::CCRect& rect);
 
     bgfx::TextureHandle getHandle();
     void bind();

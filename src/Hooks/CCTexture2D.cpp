@@ -5,6 +5,17 @@ using namespace geode::prelude;
 
 std::unordered_map<CCTexture2D*, BGFXTexture2D::BGFXData> extraData = {};
 
+void BGFXTexture2D::onModify(auto& self)
+{
+    (void)self.setHookPriorityPost("cocos2d::CCTexture2D::initWithData", Priority::Replace);
+    (void)self.setHookPriorityPost("cocos2d::CCTexture2D::setTexParameters", Priority::Replace);
+    (void)self.setHookPriorityPost("cocos2d::CCTexture2D::setAntiAliasTexParameters", Priority::Replace);
+    (void)self.setHookPriorityPost("cocos2d::CCTexture2D::setAliasTexParameters", Priority::Replace);
+    (void)self.setHookPriorityPost("cocos2d::CCTexture2D::generateMipmap", Priority::Replace);
+    (void)self.setHookPriorityPost("cocos2d::CCTexture2D::drawAtPoint", Priority::Replace);
+    (void)self.setHookPriorityPost("cocos2d::CCTexture2D::drawInRect", Priority::Replace);
+}
+
 bool BGFXTexture2D::initWithData(const void* data, CCTexture2DPixelFormat pixelFormat, unsigned int pixelsWide, unsigned int pixelsHigh, const CCSize& contentSize)
 {
     BGFXData bgData{};
@@ -18,7 +29,19 @@ bool BGFXTexture2D::initWithData(const void* data, CCTexture2DPixelFormat pixelF
     );
 
     extraData[this] = bgData;
-    return CCTexture2D::initWithData(data, pixelFormat, pixelsWide, pixelsHigh, contentSize);
+    
+    m_tContentSize = contentSize;
+    m_uPixelsWide = pixelsWide;
+    m_uPixelsHigh = pixelsHigh;
+    m_ePixelFormat = pixelFormat;
+    m_fMaxS = contentSize.width / (float)(pixelsWide);
+    m_fMaxT = contentSize.height / (float)(pixelsHigh);
+
+    m_bHasPremultipliedAlpha = false;
+    m_bHasMipmaps = false;
+
+    setShaderProgram(CCShaderCache::sharedShaderCache()->programForKey(kCCShader_PositionTexture));
+    return true;
 }
 
 void BGFXTexture2D::setTexParameters(ccTexParams* texParams)
@@ -63,6 +86,32 @@ void BGFXTexture2D::setTexParameters(ccTexParams* texParams)
 
     extraData[this].flags = flags;
 }
+
+void BGFXTexture2D::setAntiAliasTexParameters()
+{
+    log::error("CCTexture2D::setAntiAliasTexParameters: Unimplemented :3");
+}
+
+void BGFXTexture2D::setAliasTexParameters()
+{
+    log::error("CCTexture2D::setAliasTexParameters: Unimplemented :3");
+}
+
+void BGFXTexture2D::generateMipmap()
+{
+    log::error("CCTexture2D::generateMipmap: Unimplemented :3");
+}
+
+void BGFXTexture2D::drawAtPoint(const CCPoint& point)
+{
+    log::error("CCTexture2D::drawAtPoint: Unimplemented :3");
+}
+
+void BGFXTexture2D::drawInRect(const CCRect& rect)
+{
+    log::error("CCTexture2D::drawInRect: Unimplemented :3");
+}
+
 
 void BGFXTexture2D::bind()
 {
