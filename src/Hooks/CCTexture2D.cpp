@@ -9,8 +9,6 @@ bool BGFXTexture2D::initWithData(const void* data, CCTexture2DPixelFormat pixelF
 {
     BGFXData bgData{};
 
-    log::info("initWithData: {}x{}", pixelsWide, pixelsHigh);
-
     bgData.handle = bgfx::createTexture2D(pixelsWide, pixelsHigh,
         false,
         1,

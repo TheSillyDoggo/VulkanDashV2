@@ -23,7 +23,7 @@ class $modify (BGFXEGLView, CCEGLView)
             lastWidth = screenWidth;
             lastHeight = screenHeight;
 
-            bgfx::reset(screenWidth, screenHeight, BGFX_RESET_FLIP_AFTER_RENDER | BGFX_RESET_FLUSH_AFTER_RENDER);
+            log::warn("resized to {}x{}", lastWidth, lastHeight);
         }
 
         bgfx::setViewRect(0, 0, 0, screenWidth, screenHeight);
