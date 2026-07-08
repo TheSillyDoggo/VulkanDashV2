@@ -8,16 +8,11 @@ bgfx::RendererType::Enum getBest()
 {
     auto support = bgfx::getSupportedRenderers();
 
-    if (support & bgfx::RendererType::Enum::Metal)
-        return bgfx::RendererType::Enum::Metal;
-
-    if (support & bgfx::RendererType::Enum::Vulkan)
-        return bgfx::RendererType::Enum::Vulkan;
-
-    if (support & bgfx::RendererType::Enum::OpenGL)
-        return bgfx::RendererType::Enum::OpenGL;
-
-    return bgfx::RendererType::Enum::Noop;
+    #if defined(GEODE_IS_MACOS) || defined(GEODE_IS_IOS)
+    return bgfx::RendererType::Enum::Metal;
+    #else
+    return bgfx::RendererType::Enum::Vulkan;
+    #endif
 }
 
 void BGFXUtils::initBGFX(void* nativeHandle, int width, int height)
@@ -33,6 +28,10 @@ void BGFXUtils::initBGFX(void* nativeHandle, int width, int height)
     init.resolution.reset  = BGFX_RESET_NONE;
     init.resolution.debugTextScale = 3;
     
+    #ifdef BGFX_CONFIG_MULTITHREADED
+    bgfx::renderFrame();
+    #endif
+
     bgfx::init(init);
     bgfx::setDebug(BGFX_DEBUG_TEXT);
 

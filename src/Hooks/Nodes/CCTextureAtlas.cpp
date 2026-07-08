@@ -32,7 +32,6 @@ class $modify (BGFXTextureAtlas, CCTextureAtlas)
 
     void drawQuads()
     {
-        return;
         kmMat4 mat = BGFXUtils::getMatrix();
         
         bgfx::setTransform(mat.mat);

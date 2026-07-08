@@ -32,5 +32,8 @@ class $modify (BGFXEGLView, CCEGLView)
             bgfx::dbgTextPrintf(0, 6, 0x0f, "%s", CCDirector::get()->m_pFPSNode->getString());
         
         bgfx::frame();
+        #ifdef BGFX_CONFIG_MULTITHREADED
+        bgfx::renderFrame();
+        #endif
     }
 };

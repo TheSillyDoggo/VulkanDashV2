@@ -23,7 +23,6 @@ class $modify (BGFXSprite, CCSprite)
 {
     void draw()
     {
-        return;
         kmMat4 mat = BGFXUtils::getMatrix();
         
         bgfx::setTransform(mat.mat);

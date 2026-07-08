@@ -16,7 +16,7 @@ bool BGFXTexture2D::initWithData(const void* data, CCTexture2DPixelFormat pixelF
         1,
         ccFormatToBGFX(pixelFormat),
         0, 
-        bgfx::makeRef(data, pixelsWide * pixelsHigh * bitsPerPixelForFormat(pixelFormat) / 8)
+        bgfx::copy(data, pixelsWide * pixelsHigh * bitsPerPixelForFormat(pixelFormat) / 8)
     );
 
     extraData[this] = bgData;
