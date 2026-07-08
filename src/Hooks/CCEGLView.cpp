@@ -12,8 +12,21 @@ class $modify (BGFXEGLView, CCEGLView)
 {
     void swapBuffers()
     {
-        bgfx::touch(0);
-        bgfx::setViewRect(0, 0, 0, uint16_t(CCEGLView::get()->m_obScreenSize.width), uint16_t(CCEGLView::get()->m_obScreenSize.height));
+        uint16_t screenWidth = uint16_t(CCEGLView::get()->m_obScreenSize.width);
+        uint16_t screenHeight = uint16_t(CCEGLView::get()->m_obScreenSize.height);
+
+        static uint16_t lastWidth = 0;
+        static uint16_t lastHeight = 0;
+
+        if (screenWidth != lastWidth || screenHeight != lastHeight)
+        {
+            lastWidth = screenWidth;
+            lastHeight = screenHeight;
+
+            bgfx::reset(screenWidth, screenHeight, BGFX_RESET_FLIP_AFTER_RENDER | BGFX_RESET_FLUSH_AFTER_RENDER);
+        }
+
+        bgfx::setViewRect(0, 0, 0, screenWidth, screenHeight);
 
         bgfx::dbgTextClear();
 

@@ -25,6 +25,7 @@ void BGFXUtils::initBGFX(void* nativeHandle, int width, int height)
     init.platformData.type = bgfx::NativeWindowHandleType::Default;
     init.resolution.width  = width;
     init.resolution.height = height;
+    // init.resolution.reset  = BGFX_RESET_FLIP_AFTER_RENDER | BGFX_RESET_FLUSH_AFTER_RENDER;
     init.resolution.reset  = BGFX_RESET_NONE;
     init.resolution.debugTextScale = 3;
     
