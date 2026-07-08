@@ -62,6 +62,7 @@ class $modify (BGFXTextureAtlas, CCTextureAtlas)
         bgfx::setIndexBuffer(&tib);
         static_cast<BGFXTexture2D*>(m_pTexture)->bind();
 
+        // todo: sometimes this doesnt update
         bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFXUtils::getBlendFunc());
 
         bgfx::submit(0, ShaderCache::get("sprite.vs.sc", "sprite.fs.sc"));

@@ -1,13 +1,16 @@
 #include "VertexLayoutManager.hpp"
 
+#define VERTEX_TYPE_CPP($type) \
+template <> \
+bgfx::VertexLayout VertexLayoutManager::get<$type>()
+
 template <typename T>
 bgfx::VertexLayout VertexLayoutManager::get()
 {
     return {};
 }
 
-template <>
-bgfx::VertexLayout VertexLayoutManager::get<cocos2d::ccV3F_C4B_T2F>()
+VERTEX_TYPE_CPP(cocos2d::ccV3F_C4B_T2F)
 {
     static bgfx::VertexLayout layout = []{
         bgfx::VertexLayout layout;
