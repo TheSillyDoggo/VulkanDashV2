@@ -39,16 +39,19 @@ class $modify (BGFXEGLView, CCEGLView)
 
         const bgfx::Stats* stats = bgfx::getStats();
 
+        if (CCKeyboardDispatcher::get()->getAltKeyPressed())
+        {
+
         int y = 0;
 
-        
+        /*
         PRINT_STAT_I( cpuTimeFrame);               //!< CPU time between two `bgfx::frame` calls.
 		PRINT_STAT_I( cpuTimeBegin);               //!< Render thread CPU submit begin time.
 		PRINT_STAT_I( cpuTimeEnd);                 //!< Render thread CPU submit end time.
 		PRINT_STAT_I( cpuTimerFreq);               //!< CPU timer frequency. Timestamps-per-second
 		PRINT_STAT_I( gpuTimeBegin);               //!< GPU frame begin time.
 		PRINT_STAT_I( gpuTimeEnd);                 //!< GPU frame end time.
-		PRINT_STAT_I( gpuTimerFreq);               //!< GPU timer frequency.
+		PRINT_STAT_I( gpuTimerFreq);               //!< GPU timer frequency.*/
 		PRINT_STAT_I( waitRender);                 //!< Time spent waiting for render backend thread to finish issuing draw commands to underlying graphics API.
 		PRINT_STAT_I( waitSubmit);                 //!< Time spent waiting for submit thread to advance to next frame.
 		PRINT_STAT_U( numDraw);                   //!< Number of draw calls submitted.
@@ -93,7 +96,7 @@ class $modify (BGFXEGLView, CCEGLView)
         if (CCDirector::get()->m_pFPSNode)
             bgfx::dbgTextPrintf(0, 6, 0x0f, "%s", CCDirector::get()->m_pFPSNode->getString());*/
 
-        
+        }
         
         bgfx::frame();
         #ifdef BGFX_CONFIG_MULTITHREADED

@@ -13,5 +13,6 @@ class VertexLayoutManager
         template <typename T>
         static bgfx::VertexLayout get();
 
-        VERTEX_TYPE(cocos2d::ccV3F_C4B_T2F);
+        VERTEX_TYPE(cocos2d::ccV2F_C4B_T2F);
+        VERTEX_TYPE(cocos2d::ccV3F_C4B_T2F);        
 };

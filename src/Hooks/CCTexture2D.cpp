@@ -29,7 +29,8 @@ bool BGFXTexture2D::initWithData(const void* data, CCTexture2DPixelFormat pixelF
     );
 
     extraData[this] = bgData;
-    
+
+    // reimplementation of original ::initWithData but without the opengl stuff
     m_tContentSize = contentSize;
     m_uPixelsWide = pixelsWide;
     m_uPixelsHigh = pixelsHigh;

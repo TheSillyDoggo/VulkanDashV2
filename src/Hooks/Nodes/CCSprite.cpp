@@ -21,6 +21,31 @@ bgfx::IndexBufferHandle getIbh()
 
 class $modify (BGFXSprite, CCSprite)
 {
+    struct Fields
+    {
+        bool dirty = false;
+    };
+
+    void updateMemory()
+    {
+        if (m_pobBatchNode)
+            return;
+
+        // log::warn("updateMemory: {}", this);
+    }
+
+    void updateColor(void)
+    {
+        CCSprite::updateColor();
+        updateMemory();
+    }
+
+    virtual void setTextureRect(const CCRect& rect, bool rotated, const CCSize& untrimmedSize)
+    {
+        CCSprite::setTextureRect(rect, rotated, untrimmedSize);
+        updateMemory();
+    }
+
     void draw()
     {
         kmMat4 mat = BGFXUtils::getMatrix();
