@@ -13,6 +13,16 @@ bgfx::ProgramHandle ShaderCache::get(std::string vertex, std::string frag)
     return programs[{vertex, frag}];
 }
 
+bgfx::ProgramHandle ShaderCache::getCompute(std::string file)
+{
+    if (!computePrograms.contains(file))
+    {
+        computePrograms[file] = bgfx::createProgram(getShader(file), true);
+    }
+
+    return computePrograms[file];
+}
+
 bgfx::ShaderHandle ShaderCache::getShader(std::string file)
 {
     std::string renderer = "";

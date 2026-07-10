@@ -8,11 +8,12 @@
 
 using namespace geode::prelude;
 
+/*
 class $modify (BGFXParticleSystem, CCParticleSystem)
 {
     void update(float dt)
     {
-        // if (CCKeyboardDispatcher::get()->getShiftKeyPressed())
+        if (CCKeyboardDispatcher::get()->getShiftKeyPressed())
             CCParticleSystem::update(dt);
     }
-};
+};*/

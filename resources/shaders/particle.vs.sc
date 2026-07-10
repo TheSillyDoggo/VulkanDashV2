@@ -6,7 +6,7 @@ $output v_color0, v_texcoord0
 void main()
 {
     vec2  instancePos = i_data0.xy;
-    float rotation    = i_data0.z;
+    float rotation    = -(i_data0.z * 0.01745329252f);
     float size        = i_data0.w;
 
     vec2 localPos = a_position.xy * size;

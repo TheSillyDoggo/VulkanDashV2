@@ -95,7 +95,7 @@ void BGFXParticleSystemQuad::updateQuadWithParticle(tCCParticle* particle, const
 
     instance.pos.x = newPosition.x;
     instance.pos.y = newPosition.y;
-    instance.rotation = -CC_DEGREES_TO_RADIANS(particle->rotation);
+    instance.rotation = particle->rotation;
     instance.size = particle->size;
 
     float opacity = (float)m_uOpacity;
