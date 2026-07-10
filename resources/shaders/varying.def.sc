@@ -9,5 +9,5 @@ vec4 a_color0    : COLOR0;
 vec4 a_color1    : COLOR1;
 vec2 a_texcoord0 : TEXCOORD0;
 
-vec4 i_data0     : TEXCOORD4; // x, y, rotation, size
-vec4 i_data1     : TEXCOORD5; // r, g, b, a
+vec4 i_data0     : TEXCOORD4;
+vec4 i_data1     : TEXCOORD5;
