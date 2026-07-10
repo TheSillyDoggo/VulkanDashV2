@@ -22,7 +22,7 @@ bgfx::IndexBufferHandle getIbh()
 
 class $modify (BGFXSprite, CCSprite)
 {
-    virtual void updateTransform(void)
+    /*virtual void updateTransform(void)
     {
         if (m_pobBatchNode && isDirty())
         {
@@ -32,7 +32,7 @@ class $modify (BGFXSprite, CCSprite)
 
         CCSprite::updateTransform();
     }
-
+*/
     void draw()
     {
         kmMat4 mat = BGFXUtils::getMatrix();
