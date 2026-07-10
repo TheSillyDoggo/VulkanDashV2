@@ -20,9 +20,11 @@ class $modify (BGFXTexture2D, cocos2d::CCTexture2D)
     void setTexParameters(cocos2d::ccTexParams* texParams);
     void setAntiAliasTexParameters();
     void setAliasTexParameters();
+    #ifndef GEODE_IS_IOS
     void generateMipmap();
     void drawAtPoint(const cocos2d::CCPoint& point);
     void drawInRect(const cocos2d::CCRect& rect);
+    #endif
 
     bgfx::TextureHandle getHandle();
     void bind();

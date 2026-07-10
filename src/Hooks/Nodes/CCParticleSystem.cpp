@@ -12,7 +12,7 @@ class $modify (BGFXParticleSystem, CCParticleSystem)
 {
     void update(float dt)
     {
-        // if (CCKeyboardDispatcher::get()->getCmdKeyPressed())
+        // if (CCKeyboardDispatcher::get()->getShiftKeyPressed())
             CCParticleSystem::update(dt);
     }
 };

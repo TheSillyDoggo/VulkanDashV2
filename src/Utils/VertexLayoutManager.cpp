@@ -41,3 +41,18 @@ VERTEX_TYPE_CPP(cocos2d::ccV3F_C4B_T2F)
 
     return layout;
 }
+
+VERTEX_TYPE_CPP(ccV2F_T2F)
+{
+    static bgfx::VertexLayout layout = []{
+        bgfx::VertexLayout layout;
+            layout.begin()
+            .add(bgfx::Attrib::Position, 2, bgfx::AttribType::Float)
+            .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
+            .end();
+
+        return layout;
+    }();
+
+    return layout;
+}

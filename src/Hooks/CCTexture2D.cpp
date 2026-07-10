@@ -98,6 +98,8 @@ void BGFXTexture2D::setAliasTexParameters()
     log::error("CCTexture2D::setAliasTexParameters: Unimplemented :3");
 }
 
+#ifndef GEODE_IS_IOS
+
 void BGFXTexture2D::generateMipmap()
 {
     log::error("CCTexture2D::generateMipmap: Unimplemented :3");
@@ -113,6 +115,7 @@ void BGFXTexture2D::drawInRect(const CCRect& rect)
     log::error("CCTexture2D::drawInRect: Unimplemented :3");
 }
 
+#endif
 
 void BGFXTexture2D::bind()
 {
