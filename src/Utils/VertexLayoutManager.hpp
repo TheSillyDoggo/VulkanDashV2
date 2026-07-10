@@ -9,8 +9,8 @@ bgfx::VertexLayout get<$type>();
 
 typedef struct _ccV2F_T2F
 {
-    ccVertex2F        vertices;            // 8 bytes
-    ccTex2F            texCoords;            // 8 bytes
+    cocos2d::ccVertex2F        vertices;            // 8 bytes
+    cocos2d::ccTex2F            texCoords;            // 8 bytes
 } ccV2F_T2F;
 
 class VertexLayoutManager

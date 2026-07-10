@@ -17,7 +17,7 @@ float BGFXParticleSystemQuad::lerp(float from, float to, float t)
     return from + t * (to - from);
 }
 
-ccV3F_C4B_T2F BGFXParticleSystemQuad::createVertex(cocos2d::CCPoint point)
+ccV2F_T2F BGFXParticleSystemQuad::createVertex(cocos2d::CCPoint point)
 {
     auto pointRect = m_tTextureRect;
 
@@ -41,9 +41,8 @@ ccV3F_C4B_T2F BGFXParticleSystemQuad::createVertex(cocos2d::CCPoint point)
     float right = left + rect.size.width / wide;
     float top = bottom + rect.size.height / high;
 
-    return ccV3F_C4B_T2F(
-        {lerp(-0.75f, 0.75f, point.x), lerp(-0.75f, 0.75f, point.y), 0.0f},
-        {255, 255, 255, 255},
+    return ccV2F_T2F(
+        {lerp(-0.75f, 0.75f, point.x), lerp(-0.75f, 0.75f, point.y)},
         {lerp(left, right, point.x), lerp(top, bottom, point.y) }
     );
 }
@@ -57,14 +56,14 @@ void BGFXParticleSystemQuad::updateVertex()
     if (bgfx::isValid(fields->vbh))
         bgfx::destroy(fields->vbh);
 
-    ccV3F_C4B_T2F verts[4];
+    ccV2F_T2F verts[4];
 
     verts[0] = createVertex(ccp(0, 1));
     verts[1] = createVertex(ccp(1, 1));
     verts[2] = createVertex(ccp(0, 0));
     verts[3] = createVertex(ccp(1, 0));
 
-    fields->vbh = bgfx::createVertexBuffer(bgfx::copy(verts, sizeof(verts)), VertexLayoutManager::get<cocos2d::ccV3F_C4B_T2F>());
+    fields->vbh = bgfx::createVertexBuffer(bgfx::copy(verts, sizeof(verts)), VertexLayoutManager::get<ccV2F_T2F>());
 }
 
 void BGFXParticleSystemQuad::initTexCoordsWithRect(const CCRect& rect)

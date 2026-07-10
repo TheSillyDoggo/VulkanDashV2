@@ -37,6 +37,6 @@ class $modify (BGFXParticleSystemQuad, cocos2d::CCParticleSystemQuad)
     void draw();
 
     float lerp(float from, float to, float t);
-    cocos2d::ccV3F_C4B_T2F createVertex(cocos2d::CCPoint point);
+    ccV2F_T2F createVertex(cocos2d::CCPoint point);
     void updateVertex();
 };
