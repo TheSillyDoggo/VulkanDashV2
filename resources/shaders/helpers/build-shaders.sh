@@ -18,6 +18,9 @@ $SHADERC -f ../sprite.fs.sc -o ../bin/sprite.fs.vulkan.bin -i ../ --type fragmen
 $SHADERC -f ../particle.vs.sc -o ../bin/particle.vs.vulkan.bin -i ../ --type vertex --profile spirv
 $SHADERC -f ../particle.fs.sc -o ../bin/particle.fs.vulkan.bin -i ../ --type fragment --profile spirv
 
+$SHADERC -f ../batchnode.vs.sc -o ../bin/batchnode.vs.vulkan.bin -i ../ --type vertex --profile spirv
+$SHADERC -f ../batchnode.fs.sc -o ../bin/batchnode.fs.vulkan.bin -i ../ --type fragment --profile spirv
+
 # gl
 $SHADERC -f ../sprite.vs.sc -o ../bin/sprite.vs.gl.bin -i ../ --type vertex --profile 430
 $SHADERC -f ../sprite.fs.sc -o ../bin/sprite.fs.gl.bin -i ../ --type fragment --profile 430
@@ -28,3 +31,6 @@ $SHADERC -f ../sprite.fs.sc -o ../bin/sprite.fs.metal.bin -i ../ --type fragment
 
 $SHADERC -f ../particle.vs.sc -o ../bin/particle.vs.metal.bin -i ../ --type vertex --platform osx --profile metal
 $SHADERC -f ../particle.fs.sc -o ../bin/particle.fs.metal.bin -i ../ --type fragment --platform osx --profile metal
+
+$SHADERC -f ../batchnode.vs.sc -o ../bin/batchnode.vs.metal.bin -i ../ --type vertex --platform osx --profile metal
+$SHADERC -f ../batchnode.fs.sc -o ../bin/batchnode.fs.metal.bin -i ../ --type fragment --platform osx --profile metal

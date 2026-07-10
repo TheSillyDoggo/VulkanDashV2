@@ -11,26 +11,6 @@ using namespace geode::prelude;
 
 class $modify (BGFXTextureAtlas, CCTextureAtlas)
 {
-    /*struct Fields
-    {
-        bgfx::DynamicVertexBufferHandle vbh;
-    };
-
-    bool initWithTexture(CCTexture2D *texture, unsigned int capacity)
-    {
-        if (!CCTextureAtlas::initWithTexture(texture, capacity))
-            return false;
-
-        m_fields->vbh = bgfx::createDynamicVertexBuffer()
-
-        return true;
-    }
-
-    void updateQuad(ccV3F_C4B_T2F_Quad* quad, unsigned int index)
-    {
-        
-    }*/
-
     void drawQuads()
     {
         kmMat4 mat = BGFXUtils::getMatrix();
@@ -63,6 +43,9 @@ class $modify (BGFXTextureAtlas, CCTextureAtlas)
         bgfx::setIndexBuffer(&tib);
         static_cast<BGFXTexture2D*>(m_pTexture)->bind();
 
+        /*
+        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFXUtils::getBlendFunc());
+        */
         auto bn = BGFXSpriteBatchNode::getLastBatchNode();
         bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | (bn ? BGFXUtils::getBlendFunc(bn->m_blendFunc) : BGFXUtils::getBlendFunc()));
 

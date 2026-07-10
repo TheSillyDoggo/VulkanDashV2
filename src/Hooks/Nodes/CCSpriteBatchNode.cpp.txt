@@ -1,0 +1,128 @@
+#include "CCSpriteBatchNode.hpp"
+
+using namespace geode::prelude;
+
+bgfx::IndexBufferHandle getIbh4()
+{
+    static uint16_t indices[] = {
+        0, 1, 2,
+        1, 3, 2
+    };
+
+    static bgfx::IndexBufferHandle ibh = bgfx::createIndexBuffer(bgfx::copy(indices, sizeof(indices)));
+    return ibh;
+}
+
+void BGFXSpriteBatchNode::lazyInitBGFX()
+{
+    auto fields = m_fields.self();
+
+    if (!bgfx::isValid(fields->vbh))
+    {
+        ccV3F_C4B_T2F verts[4];
+
+        verts[0] = createVertex(ccp(0, 1));
+        verts[1] = createVertex(ccp(1, 1));
+        verts[2] = createVertex(ccp(0, 0));
+        verts[3] = createVertex(ccp(1, 0));
+
+        m_fields->vbh = bgfx::createVertexBuffer(bgfx::copy(verts, sizeof(verts)), VertexLayoutManager::get<cocos2d::ccV3F_C4B_T2F>());
+    }
+
+    m_fields->instances.resize(m_pobTextureAtlas->m_uCapacity);
+}
+
+void BGFXSpriteBatchNode::updateInstance(cocos2d::CCSprite* sprite)
+{
+    lazyInitBGFX();
+
+    auto fields = m_fields.self();
+
+    if (!sprite || (sprite->m_uAtlasIndex >= fields->instances.size() || sprite->m_uAtlasIndex < 0))
+        return;
+
+    auto& instance = fields->instances[sprite->m_uAtlasIndex];
+
+    instance.pos = sprite->m_obPosition;
+    instance.scale = {sprite->m_fScaleX, sprite->m_fScaleY};
+    instance.rotation = { sprite->m_fRotationX, sprite->m_fRotationY };
+    instance.skew = { sprite->m_fSkewX, sprite->m_fSkewY };
+    instance.uv0 = sprite->m_sQuad.bl.texCoords;
+    instance.uv1 = sprite->m_sQuad.tr.texCoords;
+    instance.colour = ccc4FFromccc3B(sprite->getColor());
+    instance.colour.a = sprite->getOpacity() / 255.0f;
+    instance.contentSize = sprite->m_obContentSize;
+    instance.anchorPoint = sprite->m_obAnchorPoint;
+}
+
+ccV3F_C4B_T2F BGFXSpriteBatchNode::createVertex(cocos2d::CCPoint point)
+{
+    return ccV3F_C4B_T2F(
+        { point.x, point.y, 0},
+        {255, 255, 255, 255},
+        { point.x, point.y }
+    );
+}
+
+bool BGFXSpriteBatchNode::initWithTexture(CCTexture2D *tex, unsigned int capacity)
+{
+    if (!CCSpriteBatchNode::initWithTexture(tex, capacity))
+        return false;
+
+    lazyInitBGFX();
+    return true;
+}
+
+
+void BGFXSpriteBatchNode::insertQuadFromSprite(CCSprite *sprite, unsigned int index) {
+    sprite->m_uAtlasIndex = index;
+    updateInstance(sprite);
+}
+void BGFXSpriteBatchNode::updateQuadFromSprite(CCSprite *sprite, unsigned int index) {
+    sprite->m_uAtlasIndex = index;
+    updateInstance(sprite);
+}
+
+void BGFXSpriteBatchNode::draw()
+{
+    lazyInitBGFX();
+    for (auto& spr : CCArrayExt<CCSprite*>(m_pChildren))
+    {
+        spr->updateTransform();
+    }
+
+    auto fields = m_fields.self();
+
+    kmMat4 mat = BGFXUtils::getMatrix();
+    bgfx::setTransform(mat.mat);
+
+    int count = fields->instances.size();
+    
+    auto ret = bgfx::getAvailInstanceDataBuffer(count, sizeof(GPUSpriteInstance));
+    if (ret < count)
+    {
+        log::error("instance count bigger BATCHNODE EDITION: {} < {}", ret, count);
+        return; 
+    }
+
+    if (fields->instances.data() == 0x0)
+    {
+        log::error("NULLPTR DATA");
+        return;
+    }
+
+    bgfx::InstanceDataBuffer idb;
+    bgfx::allocInstanceDataBuffer(&idb, count, sizeof(GPUSpriteInstance));
+    std::memcpy(idb.data, fields->instances.data(), count * sizeof(GPUSpriteInstance));
+
+    bgfx::setVertexBuffer(0, fields->vbh);
+    bgfx::setIndexBuffer(getIbh4());
+
+    bgfx::setInstanceDataBuffer(&idb);
+
+    static_cast<BGFXTexture2D*>(m_pobTextureAtlas->m_pTexture)->bind();
+
+    bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFXUtils::getBlendFunc(getBlendFunc()));
+
+    bgfx::submit(0, ShaderCache::get("batchnode.vs.sc", "batchnode.fs.sc"));
+}

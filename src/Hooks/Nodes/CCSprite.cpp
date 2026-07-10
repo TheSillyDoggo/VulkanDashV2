@@ -5,6 +5,7 @@
 #include "../Utils/ShaderCache.hpp"
 #include <BGFX.hpp>
 #include "../CCTexture2D.hpp"
+#include "CCSpriteBatchNode.hpp"
 
 using namespace geode::prelude;
 
@@ -21,29 +22,15 @@ bgfx::IndexBufferHandle getIbh()
 
 class $modify (BGFXSprite, CCSprite)
 {
-    struct Fields
+    virtual void updateTransform(void)
     {
-        bool dirty = false;
-    };
+        if (m_pobBatchNode && isDirty())
+        {
+            static_cast<BGFXSpriteBatchNode*>(m_pobBatchNode)->updateInstance(this);
+            setDirty(false);
+        }
 
-    void updateMemory()
-    {
-        if (m_pobBatchNode)
-            return;
-
-        // log::warn("updateMemory: {}", this);
-    }
-
-    void updateColor(void)
-    {
-        CCSprite::updateColor();
-        updateMemory();
-    }
-
-    virtual void setTextureRect(const CCRect& rect, bool rotated, const CCSize& untrimmedSize)
-    {
-        CCSprite::setTextureRect(rect, rotated, untrimmedSize);
-        updateMemory();
+        CCSprite::updateTransform();
     }
 
     void draw()

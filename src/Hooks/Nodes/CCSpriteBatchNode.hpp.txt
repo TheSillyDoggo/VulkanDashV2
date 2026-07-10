@@ -1,0 +1,47 @@
+#pragma once
+
+#include <Geode/Geode.hpp>
+#include <Geode/modify/CCSpriteBatchNode.hpp>
+#include <bgfx/bgfx.h>
+#include "../Utils/VertexLayoutManager.hpp"
+#include "../Utils/ShaderCache.hpp"
+#include "../CCTexture2D.hpp"
+#include <BGFX.hpp>
+
+struct GPUSpriteInstance
+{
+    cocos2d::CCPoint pos;
+    cocos2d::ccVertex2F scale;
+    cocos2d::ccVertex2F rotation;
+    cocos2d::ccVertex2F skew;
+    cocos2d::ccTex2F uv0; // bl
+    cocos2d::ccTex2F uv1; // tr
+    cocos2d::CCSize contentSize;
+    cocos2d::CCPoint anchorPoint;
+    cocos2d::ccColor4F colour;
+};
+
+class $modify (BGFXSpriteBatchNode, cocos2d::CCSpriteBatchNode)
+{
+    struct Fields
+    {
+        bgfx::VertexBufferHandle vbh = {bgfx::kInvalidHandle};
+        std::vector<GPUSpriteInstance> instances = {};
+
+        ~Fields()
+        {
+            if (bgfx::isValid(vbh))
+                bgfx::destroy(vbh);
+        }
+    };
+
+    // hooks
+    bool initWithTexture(cocos2d::CCTexture2D *tex, unsigned int capacity);
+    void insertQuadFromSprite(cocos2d::CCSprite *sprite, unsigned int index);
+    void updateQuadFromSprite(cocos2d::CCSprite *sprite, unsigned int index);
+    void draw();
+
+    cocos2d::ccV3F_C4B_T2F createVertex(cocos2d::CCPoint point);
+    void updateInstance(cocos2d::CCSprite* sprite);
+    void lazyInitBGFX();
+};
