@@ -39,10 +39,19 @@ class $modify (BGFXEGLView, CCEGLView)
 
         const bgfx::Stats* stats = bgfx::getStats();
 
+        int y = 0;
+
+        if (CCKeyboardDispatcher::get()->getControlKeyPressed())
+        {
+            y++;
+            bgfx::dbgTextPrintf(0, y, 0x0f, "GPU: %s", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+
+            y++;
+            bgfx::dbgTextPrintf(0, y, 0x0f, "Renderer: %s", bgfx::getRendererName(bgfx::getRendererType()));
+        }
+
         if (CCKeyboardDispatcher::get()->getAltKeyPressed())
         {
-
-        int y = 0;
 
         /*
         PRINT_STAT_I( cpuTimeFrame);               //!< CPU time between two `bgfx::frame` calls.
